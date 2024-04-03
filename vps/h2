@@ -87,6 +87,13 @@ function setup_config
 EOT
 
     sudo chmod 600 $CONFIG
+
+    # Write qr.sh to display client config as QR image
+    local title url
+    title="${DOMAIN%%.*}-hy2"
+    url="hysteria2://$passwd@$DOMAIN:$PORT?obfs=none#$title"
+    echo -e "#/bin/sh\necho '$url' | qrencode -t utf8" | sudo tee $DIR/qr.sh
+    sudo chmod 700 $DIR/qr.sh
 }
 
 function setup_start
@@ -123,12 +130,7 @@ function start
 
 function print_qr
 {
-    local passwd title
-
-    passwd=$(_get_passwd)
-    title=${DOMAIN%%.*}-hy2
-    echo "hysteria2://$passwd@$DOMAIN:$PORT?obfs=none#$title" \
-        | qrencode -t utf8
+    sudo -H -u $GITHUB_ID $DIR/qr.sh
 }
 
 main "$@"

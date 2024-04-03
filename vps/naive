@@ -68,6 +68,14 @@ function setup_config
 EOT
 
     sudo chmod 600 $CONFIG
+
+    # Write qr.sh to display client config as QR image
+    local encoded title url
+    encoded=$(echo -n "$GITHUB_ID:$pass@$DOMAIN:443" | base64 --wrap 0)
+    title="${DOMAIN%%.*}-naive"
+    url="http2://${encoded}#$title"
+    echo -e "#/bin/sh\necho '$url' | qrencode -t utf8" | sudo tee $DIR/qr.sh
+    sudo chmod 700 $DIR/qr.sh
 }
 
 function setup_start
@@ -101,12 +109,7 @@ function setup_crontab
 
 function print_qr
 {
-    local pass encoded title
-
-    pass=$(_get_pass)
-    encoded=$(echo -n "$GITHUB_ID:$pass@$DOMAIN:443" | base64)
-    title=${DOMAIN%%.*}-naive
-    echo "http2://${encoded}#$title" | qrencode -t utf8
+    sudo -H -u $GITHUB_ID $DIR/qr.sh
 }
 
 main "$@"

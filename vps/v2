@@ -2,12 +2,13 @@
 # Script to setup v2ray on Ubuntu VPS. Verified versions: 22.04.1 LTS.
 # Requires sudo and docker environment (see vps.sh).
 #
-# Example usage: curl -L last.re/vps/v2 | bash -s ymattw
+# Example usage: curl -L last.re/vps/v2 | bash -s ymattw vps.example.com
 
 set -o errexit
 set -o nounset
 
-GITHUB_ID="${1?:'Usage: $0 <github username>'}"
+GITHUB_ID="${1?:'Usage: $0 <github username> <domain name'}"
+DOMAIN="${2?:'Usage: $0 <github username> <domain name>'}"
 
 PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 
@@ -22,6 +23,7 @@ function main
     setup_config
     setup_start
     start
+    print_qr
 }
 
 function _get_uuid
@@ -72,6 +74,14 @@ function setup_config
 EOT
 
     sudo chmod 600 $CONFIG
+
+    # Write qr.sh to display client config as QR image
+    local encoded title url
+    encoded=$(echo -n "auto:$uuid@$DOMAIN:$PORT" | base64 --wrap 0)
+    title="${DOMAIN%%.*}-vmess"
+    url="vmess://${encoded}?remarks=$title&obfs=none&alterId=0"
+    echo -e "#/bin/sh\necho '$url' | qrencode -t utf8" | sudo tee $DIR/qr.sh
+    sudo chmod 700 $DIR/qr.sh
 }
 
 function setup_start
@@ -100,6 +110,11 @@ function start
 
     echo "Starting container '$CONTAINER'"
     sudo -H -u $GITHUB_ID $DIR/start.sh
+}
+
+function print_qr
+{
+    sudo -H -u $GITHUB_ID $DIR/qr.sh
 }
 
 main "$@"
