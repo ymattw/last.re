@@ -23,6 +23,7 @@ function main
     setup_config
     setup_start
     start
+    print_qr
 }
 
 function _find_cert_dir
@@ -118,6 +119,16 @@ function start
 
     echo "Starting container '$CONTAINER'"
     sudo -H -u $GITHUB_ID $DIR/start.sh
+}
+
+function print_qr
+{
+    local passwd title
+
+    passwd=$(_get_passwd)
+    title=${DOMAIN%%.*}-hy2
+    echo "hysteria2://$passwd@$DOMAIN:$PORT?obfs=none#$title" \
+        | qrencode -t utf8
 }
 
 main "$@"
