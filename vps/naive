@@ -22,6 +22,7 @@ function main
     setup_start
     start
     setup_crontab
+    print_qr
 }
 
 function _get_pass
@@ -96,6 +97,16 @@ function setup_crontab
     } | sudo -u $GITHUB_ID crontab
 
     sudo crontab -lu $GITHUB_ID
+}
+
+function print_qr
+{
+    local pass encoded title
+
+    pass=$(_get_pass)
+    encoded=$(echo -n "$GITHUB_ID:$pass@$DOMAIN:443" | base64)
+    title=${DOMAIN%%.*}-naive
+    echo "http2://${encoded}#$title" | qrencode -t utf8
 }
 
 main "$@"
