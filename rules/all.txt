@@ -5,11 +5,11 @@ bypass-tun = 10.0.0.0/8, 100.64.0.0/10, 127.0.0.0/8, 169.254.0.0/16, 172.16.0.0/
 skip-proxy = 127.0.0.1, 192.168.0.0/16, 10.0.0.0/8, 172.16.0.0/12, 100.64.0.0/10, localhost, *.local, *.crashlytics.com, captive.apple.com
 
 [Rule]
-RULE-SET, https://last.re/sr/lan.txt, DIRECT
-RULE-SET, https://last.re/sr/web-ads.txt, REJECT
-RULE-SET, https://last.re/sr/app-ads.txt, REJECT
-RULE-SET, https://last.re/sr/apple.txt, DIRECT
-RULE-SET, https://last.re/sr/cn.txt, DIRECT
+RULE-SET, https://last.re/rules/lan.txt, DIRECT
+RULE-SET, https://last.re/rules/web-ads.txt, REJECT
+RULE-SET, https://last.re/rules/app-ads.txt, REJECT
+RULE-SET, https://last.re/rules/apple.txt, DIRECT
+RULE-SET, https://last.re/rules/cn.txt, DIRECT
 
 GEOIP, CN, DIRECT
 FINAL, PROXY, force-remote-dns
