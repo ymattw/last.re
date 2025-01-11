@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script to setup account on Ubuntu VPS. Verified versions: 22.04.
+# Script to setup account on VPS, verified versions: Ubuntu 22.04, Debian 12.
 #
 # Example usage: curl -L last.re/vps/init | bash -s ymattw
 
@@ -19,12 +19,14 @@ function main
     setup_sshd
     setup_sudo
     setup_firewall
+    setup_resolved
 }
 
 function install_pkgs
 {
     sudo apt update -y
     sudo apt install -y \
+        cron \
         docker.io \
         git \
         net-tools \
@@ -126,6 +128,15 @@ function setup_firewall
     sudo ufw allow proto udp from any to any port 60000:65535
     sudo ufw --force enable
     sudo ufw reload
+}
+
+function setup_resolved
+{
+    ! grep -q '^LLMNR=no$' /etc/systemd/resolved.conf || return 0
+    sudo sed -i'' -r \
+        -e 's/^#?\s*LLMNR=.*/LLMNR=no/' \
+        /etc/systemd/resolved.conf
+    sudo service systemd-resolved restart
 }
 
 main "$@"
