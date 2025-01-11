@@ -20,6 +20,7 @@ function main
     setup_sudo
     setup_firewall
     setup_resolved
+    disable_exim
 }
 
 function install_pkgs
@@ -137,6 +138,14 @@ function setup_resolved
         -e 's/^#?\s*LLMNR=.*/LLMNR=no/' \
         /etc/systemd/resolved.conf
     sudo service systemd-resolved restart
+}
+
+function disable_exim
+{
+    if sudo systemctl list-unit-files exim4.service; then
+        sudo systemctl stop exim4.services
+        sudo systemctl disable exim4.services
+    fi
 }
 
 main "$@"
