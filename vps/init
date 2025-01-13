@@ -30,10 +30,13 @@ function install_pkgs
         cron \
         docker.io \
         git \
+        locate \
+        make \
         net-tools \
         qrencode \
         rsync \
         tmux \
+        tree \
         ufw \
         vim-nox \
         zsh
@@ -107,9 +110,9 @@ function setup_sshd
     echo "Updating ssh listening port from 22 to 60022 / disable root login"
     sudo sed -i'' -r \
         -e 's/^#?\s*Port 22$/Port 60022/' \
-        -e 's/^#?\s*PermitRootLogin yes/PermitRootLogin no/' \
+        -e 's/^#?\s*PermitRootLogin .*/PermitRootLogin no/' \
         /etc/ssh/sshd_config
-    sudo service ssh restart
+    sudo systemctl restart ssh
 }
 
 function setup_sudo
@@ -137,15 +140,14 @@ function setup_resolved
     sudo sed -i'' -r \
         -e 's/^#?\s*LLMNR=.*/LLMNR=no/' \
         /etc/systemd/resolved.conf
-    sudo service systemd-resolved restart
+    sudo systemctl restart systemd-resolved
 }
 
 function disable_exim
 {
-    if sudo systemctl list-unit-files exim4.service; then
-        sudo systemctl stop exim4.services
-        sudo systemctl disable exim4.services
-    fi
+    sudo systemctl status exim4 || return 0
+    sudo systemctl stop exim4
+    sudo systemctl disable exim4
 }
 
 main "$@"
