@@ -7,12 +7,12 @@
 set -o errexit
 set -o nounset
 
-GITHUB_ID="${1?:'Usage: $0 <github username> <domain name'}"
+GITHUB_ID="${1?:'Usage: $0 <github username> <domain name>'}"
 DOMAIN="${2?:'Usage: $0 <github username> <domain name>'}"
 
 PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 
-IMAGE="v2fly/v2fly-core:v5.14.1"
+IMAGE="v2fly/v2fly-core:v5.23.0"
 DIR="/opt/v2"
 PORT="60066"
 CONFIG="$DIR/config.json"
