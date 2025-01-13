@@ -13,10 +13,10 @@ DOMAIN="${2?:'Usage: $0 <github username> <domain name>'}"
 PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 
 IMAGE="tobyxdd/hysteria:v2.6.0"
-DIR="/opt/hysteria"
+DIR="/opt/h2"
 PORT="60077"
 CONFIG="$DIR/config.yaml"
-CONTAINER="hysteria"
+CONTAINER="h2"
 
 function main
 {
