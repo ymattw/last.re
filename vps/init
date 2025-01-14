@@ -12,7 +12,6 @@ PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 
 function main
 {
-    install_pkgs
     create_user
     modify_user
     setup_ssh
@@ -21,25 +20,7 @@ function main
     setup_firewall
     setup_resolved
     disable_exim
-}
-
-function install_pkgs
-{
-    sudo apt update -y
-    sudo apt install -y \
-        cron \
-        docker.io \
-        git \
-        locate \
-        make \
-        net-tools \
-        qrencode \
-        rsync \
-        tmux \
-        tree \
-        ufw \
-        vim-nox \
-        zsh
+    install_pkgs
 }
 
 function create_user
@@ -148,6 +129,26 @@ function disable_exim
     sudo systemctl status exim4 || return 0
     sudo systemctl stop exim4
     sudo systemctl disable exim4
+}
+
+function install_pkgs
+{
+    sudo apt update -y
+    sudo apt install -y \
+        cron \
+        docker.io \
+        git \
+        locate \
+        make \
+        net-tools \
+        python3-venv \
+        qrencode \
+        rsync \
+        tmux \
+        tree \
+        ufw \
+        vim-nox \
+        zsh
 }
 
 main "$@"
